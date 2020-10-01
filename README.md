@@ -13,6 +13,6 @@ Well the justification behind biternet is quite simple: Internet is not homogeno
 ## How does it work?
 See the following sequence diagram: 
 
-![Sequence Diagram](images/sequence.jpg "sequence Diagram")
+![Sequence Diagram](images/sequence.jpg "Sequence Diagram")
 
-A master program runs and makes requests for a file, the server gets a session ID for the particular request. File-Distribution endpoint keeps tracks of the last chunk allocated to a request and prepares the next chunk for allocation.
+A master program runs and makes requests for a file, the server gets a session ID for the particular request. File-Distribution endpoint keeps tracks of the last chunk allocated to a request and prepares the next chunk for allocation. 
