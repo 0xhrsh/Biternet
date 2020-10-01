@@ -12,3 +12,4 @@ Well the justification behind biternet is quite simple: Internet is not homogeno
 
 ## How does it work?
 See the following Secquence diagram: 
+![Secquence Diagram](images/secquence.jpg "Secquence Diagram")
