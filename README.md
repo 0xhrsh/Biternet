@@ -1,4 +1,4 @@
-# Biternet
+# Biternet ![Status active](https://img.shields.io/badge/Status-active%20development-2eb3c1.svg) ![Python 3.7.1](https://img.shields.io/badge/Python-3.7.1-blue.svg) ![Python Package CI](../../workflows/Python%20package/badge.svg)
 Biternet is a new way approach to Internet. In conventional Internet we download files from one source over a network or we download files from multiple sources over a single network, but we don't download files from a single/multiple sources over multiple networks. If small parts of file (will be referred as chunks from here) can be downloaded over multiple networks then we can increase the speed of download and get around any data limit on a single network.
 
 Why isn't this technology not used everywhere? Well, multiple reasons: 
