@@ -11,8 +11,8 @@ Why isn't this technology not used everywhere? Well, multiple reasons:
 Well the justification behind biternet is quite simple: Internet is not homogenous, while the average internet speed in India is less than 1 MB per second the same for US is over 10MB ber second! This data gets even worse for Africa! So for people who wish to share files that can be as large as hundreds of GigaBytes in size, We need a better approach. It will take 3 hrs to download a file of size 100 GB over an internet with 10MBps, It will take 30 hrs for 1MBps! If we somehow download the same file over 3 differnet networks, we can reduce the download time 20hrs! This is where Biternet can solve real world problems.
 
 ## How does it work?
-See the following Secquence diagram: 
+See the following sequence diagram: 
 
-![Secquence Diagram](images/secquence.jpg "Secquence Diagram")
+![Sequence Diagram](images/sequence.jpg "sequence Diagram")
 
 A master program runs and makes requests for a file, the server gets a session ID for the particular request. File-Distribution endpoint keeps tracks of the last chunk allocated to a request and prepares the next chunk for allocation.
