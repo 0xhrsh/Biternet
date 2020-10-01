@@ -1,6 +1,6 @@
 import os
-from .HTTPRequest import HTTPRequest
-from .TCPServer import TCPServer
+from HTTPRequest import HTTPRequest
+from TCPServer import TCPServer
 
 
 class HTTPServer(TCPServer):
@@ -20,7 +20,7 @@ class HTTPServer(TCPServer):
 
         # Calling the Appropriate handler
         try:
-            handler = getattr(self, 'handle_%s' % request.method)
+            handler = getattr(self, "handle_" + request.method)
         except AttributeError:
             handler = self.HTTP_501_handler
 
@@ -31,7 +31,7 @@ class HTTPServer(TCPServer):
     def handle_OPTIONS(self, request):
         response_line = self.response_line(200)
 
-        extra_headers = {'Allow': 'OPTIONS, GET'}
+        extra_headers = {'Allow': 'OPTIONS, GET, BIT'}
         response_headers = self.response_headers(extra_headers)
 
         blank_line = "\r\n"
@@ -43,6 +43,7 @@ class HTTPServer(TCPServer):
         )
 
     def handle_GET(self, request):
+        # if()
         filename = request.uri.strip('/')
         if os.path.exists(filename):
             response_line = self.response_line(200)
@@ -61,6 +62,19 @@ class HTTPServer(TCPServer):
             response_headers,
             blank_line,
             response_body
+        )
+
+    def handle_BIT(self, request):
+
+        response_line = self.response_line(200)
+        response_headers = self.response_headers()
+        blank_line = "\r\n"
+
+        return "%s%s%s%s" % (
+            response_line,
+            response_headers,
+            blank_line,
+            "Thanks for making a BIT Request"
         )
 
     def HTTP_501_handler(self, request):
