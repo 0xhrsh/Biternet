@@ -2,6 +2,8 @@ from FileDistribution import FileDistributor
 from HTTPRequest import HTTPRequest
 from TCPServer import TCPServer
 
+blank_line = "\r\n"
+
 
 class HTTPServer(TCPServer):
     headers = {
@@ -11,6 +13,7 @@ class HTTPServer(TCPServer):
     status_codes = {
         200: 'OK',
         201: 'File Downloaded Successfully',
+        400: 'Bad Request',
         404: 'Not Found',
         501: 'Not Implemented',
     }
@@ -36,8 +39,6 @@ class HTTPServer(TCPServer):
         extra_headers = {'Allow': 'OPTIONS, GET, BIT'}
         response_headers = self.response_headers(extra_headers)
 
-        blank_line = "\r\n"
-
         return "%s%s%s" % (
             response_line,
             response_headers,
@@ -45,8 +46,33 @@ class HTTPServer(TCPServer):
         )
 
     def handle_GET(self, request):
-        fileID = request.uri.strip('/')
+        cmd = request.uri.strip('/')
+
+        try:
+            get = cmd.split('/')[0]
+            if(get == "token"):
+                return self.get_token(cmd.split('/')[1])
+            elif(get == "chunk"):
+                return self.get_chunk(cmd.split('/')[1])
+            else:
+                response_line = self.response_line(400)
+                response_headers = self.response_headers()
+                response_body = "<h1>400 No Such Operation</h1>"
+        except IndexError:
+            response_line = self.response_line(400)
+            response_headers = self.response_headers()
+            response_body = "<h1>400 Bad Request</h1>"
+
+        return "%s%s%s%s" % (
+            response_line,
+            response_headers,
+            blank_line,
+            response_body
+        )
+
+    def get_token(self, fileID):
         file = FileDistributor(fileID)
+
         if file.valid:
             response_line = self.response_line(200)
             response_headers = self.response_headers()
@@ -56,9 +82,7 @@ class HTTPServer(TCPServer):
         else:
             response_line = self.response_line(404)
             response_headers = self.response_headers()
-            response_body = "<h1>404 Not Found</h1>"
-
-        blank_line = "\r\n"
+            response_body = "<h1>404 File Not Found</h1>"
 
         return "%s%s%s%s" % (
             response_line,
@@ -67,9 +91,7 @@ class HTTPServer(TCPServer):
             response_body
         )
 
-    def handle_BIT(self, request):
-        sessionID = request.uri.strip('/')
-        blank_line = "\r\n"
+    def get_chunk(self, sessionID):
         chunk_no = -1
 
         try:
@@ -97,7 +119,6 @@ class HTTPServer(TCPServer):
     def HTTP_501_handler(self, request):
         response_line = self.response_line(status_code=501)
         response_headers = self.response_headers()
-        blank_line = "\r\n"
         response_body = "<h1>501 Not Implemented</h1>"
 
         return "%s%s%s%s" % (
