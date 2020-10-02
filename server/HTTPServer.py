@@ -1,4 +1,4 @@
-import os
+from FileDistribution import FileDistributor
 from HTTPRequest import HTTPRequest
 from TCPServer import TCPServer
 
@@ -13,6 +13,7 @@ class HTTPServer(TCPServer):
         404: 'Not Found',
         501: 'Not Implemented',
     }
+    Sessions = {}
 
     def handle_request(self, data):
         # create an instance of HTTPRequest
@@ -43,13 +44,14 @@ class HTTPServer(TCPServer):
         )
 
     def handle_GET(self, request):
-        # if()
-        filename = request.uri.strip('/')
-        if os.path.exists(filename):
+        fileID = request.uri.strip('/')
+        file = FileDistributor(fileID)
+        if file.valid:
             response_line = self.response_line(200)
             response_headers = self.response_headers()
-            with open(filename) as f:
-                response_body = f.read()
+            sessionID = file.create_session()
+            self.Sessions[str(sessionID)] = file
+            response_body = sessionID
         else:
             response_line = self.response_line(404)
             response_headers = self.response_headers()
@@ -65,16 +67,23 @@ class HTTPServer(TCPServer):
         )
 
     def handle_BIT(self, request):
-
-        response_line = self.response_line(200)
-        response_headers = self.response_headers()
+        sessionID = request.uri.strip('/')        
         blank_line = "\r\n"
+        
+        try:
+            response_body = self.Sessions[sessionID].get_next_chunk()
+            response_line = self.response_line(200)
+            response_headers = self.response_headers()
+        except KeyError:
+            response_body = "<h1>404 Session Not Found</h1>"
+            response_line = self.response_line(404)
+            response_headers = self.response_headers()
 
         return "%s%s%s%s" % (
             response_line,
             response_headers,
             blank_line,
-            "Thanks for making a BIT Request"
+            response_body
         )
 
     def HTTP_501_handler(self, request):
