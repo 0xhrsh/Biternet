@@ -18,3 +18,7 @@ class FileDistributor:
 
     def get_next_chunk(self, chunk_size=16):
         return self.filePointer.read(chunk_size)
+
+    def __del__(self):
+        print("File Closed Successfully")
+        self.filePointer.close()

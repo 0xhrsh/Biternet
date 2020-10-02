@@ -10,6 +10,7 @@ class HTTPServer(TCPServer):
     }
     status_codes = {
         200: 'OK',
+        201: 'File Downloaded Successfully',
         404: 'Not Found',
         501: 'Not Implemented',
     }
@@ -74,6 +75,11 @@ class HTTPServer(TCPServer):
             response_body = self.Sessions[sessionID].get_next_chunk()
             response_line = self.response_line(200)
             response_headers = self.response_headers()
+
+            if(not response_body):
+                del self.Sessions[sessionID]
+                response_line = self.response_line(201)
+                
         except KeyError:
             response_body = "<h1>404 Session Not Found</h1>"
             response_line = self.response_line(404)
