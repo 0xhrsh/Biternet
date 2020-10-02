@@ -1,6 +1,5 @@
 import requests
 from multiprocessing import Process
-import json 
 
 
 URL = "http://127.0.0.1:8888/"
@@ -10,11 +9,9 @@ stop = False
 def get_chunk(token):
     while(not stop):
         r = requests.get(url=URL+"chunk/"+token)
-        if(r.status_code==201):
+        if(r.status_code == 201):
             break
         print(eval(r.text))
-        
-        
 
 
 def download(file, threads):
