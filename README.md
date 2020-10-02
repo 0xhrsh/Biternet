@@ -16,3 +16,25 @@ See the following sequence diagram:
 ![Sequence Diagram](images/sequence.jpg "Sequence Diagram")
 
 A master program runs and makes requests for a file, the server gets a session ID for the particular request. File-Distribution endpoint keeps tracks of the last chunk allocated to a request and prepares the next chunk for allocation. We then make multiple requests to the server from different networks to claim and download a chunk of the file, untill the entire file is downloaded. We asynchronously compile those chunks to create the entire file. For the ith network, we request a chunk of file and we recieve the chunk, notice that allocating small chunks to networks who don't have a backlog (who have downloaded their previous chunks) will actally make sure that the file is downloaded optimally (almost) over the n networks we are using. This is how we can download large files over multiple networks in a fast and efficient way.
+
+
+## Requirements:
+```
+Python 3.7+
+pip3
+```
+
+## Install Dependencies:
+```
+pip3 install -r requirements.txt
+```
+
+## Setup Server:
+```
+cd Server && python3 main.py
+```
+
+## Download Asynchronously:
+```
+cd Client && python3 main.py
+```
