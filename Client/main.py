@@ -1,5 +1,6 @@
 import requests
 from multiprocessing import Process
+import json 
 
 
 URL = "http://127.0.0.1:8888/"
@@ -9,16 +10,18 @@ stop = False
 def get_chunk(token):
     while(not stop):
         r = requests.get(url=URL+"chunk/"+token)
-        if(r.text.split()[-1] == "-1"):
+        if(r.status_code==201):
             break
-        print(r.text.split()[:-1])
+        print(eval(r.text))
+        
+        
 
 
-def download(file):
+def download(file, threads):
     r = requests.get(url=URL+"token/"+file)
     print(r.text)
     Pros = []
-    for i in range(0, 3):
+    for i in range(0, threads):
         p = Process(target=get_chunk, args=(r.text,))
         Pros.append(p)
         p.start()
@@ -28,4 +31,4 @@ def download(file):
 
 
 if __name__ == '__main__':
-    download("test.txt")
+    download("test.txt", 1)
