@@ -109,8 +109,8 @@ class HTTPServer(TCPServer):
             response_headers = self.response_headers()
 
         data = {
-            "chunkNum" : chunk_no,
-            "text" : response_body,
+            "chunkNum": chunk_no,
+            "text": response_body,
         }
 
         return "%s%s%s%s" % (
