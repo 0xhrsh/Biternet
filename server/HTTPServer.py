@@ -108,12 +108,16 @@ class HTTPServer(TCPServer):
             response_line = self.response_line(404)
             response_headers = self.response_headers()
 
-        return "%s%s%s%s %s" % (
+        data = {
+            "chunkNum" : chunk_no,
+            "text" : response_body,
+        }
+
+        return "%s%s%s%s" % (
             response_line,
             response_headers,
             blank_line,
-            response_body,
-            chunk_no,
+            str(data),
         )
 
     def HTTP_501_handler(self, request):
