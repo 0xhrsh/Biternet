@@ -68,28 +68,30 @@ class HTTPServer(TCPServer):
         )
 
     def handle_BIT(self, request):
-        sessionID = request.uri.strip('/')        
+        sessionID = request.uri.strip('/')
         blank_line = "\r\n"
-        
+        chunk_no = -1
+
         try:
-            response_body = self.Sessions[sessionID].get_next_chunk()
+            chunk_no, response_body = self.Sessions[sessionID].get_next_chunk()
             response_line = self.response_line(200)
             response_headers = self.response_headers()
 
             if(not response_body):
                 del self.Sessions[sessionID]
                 response_line = self.response_line(201)
-                
+
         except KeyError:
             response_body = "<h1>404 Session Not Found</h1>"
             response_line = self.response_line(404)
             response_headers = self.response_headers()
 
-        return "%s%s%s%s" % (
+        return "%s%s%s%s %s" % (
             response_line,
             response_headers,
             blank_line,
-            response_body
+            response_body,
+            chunk_no,
         )
 
     def HTTP_501_handler(self, request):
