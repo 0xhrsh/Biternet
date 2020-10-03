@@ -1,8 +1,11 @@
+import jwt
+
 from FileDistribution import FileDistributor
 from HTTPRequest import HTTPRequest
 from TCPServer import TCPServer
 
 blank_line = "\r\n"
+secret = 'secret'
 
 
 class HTTPServer(TCPServer):
@@ -53,7 +56,7 @@ class HTTPServer(TCPServer):
             if(get == "token"):
                 return self.get_token(cmd.split('/')[1])
             elif(get == "chunk"):
-                return self.get_chunk(cmd.split('/')[1])
+                return self.get_chunk(request)
             else:
                 response_line = self.response_line(400)
                 response_headers = self.response_headers()
@@ -78,7 +81,7 @@ class HTTPServer(TCPServer):
             response_headers = self.response_headers()
             sessionID = file.create_session()
             self.Sessions[str(sessionID)] = file
-            response_body = sessionID
+            response_body = self._encrypt_session_id(sessionID)
         else:
             response_line = self.response_line(404)
             response_headers = self.response_headers()
@@ -91,10 +94,12 @@ class HTTPServer(TCPServer):
             response_body
         )
 
-    def get_chunk(self, sessionID):
+    def get_chunk(self, request):
         chunk_no = -1
-
         try:
+            token = request.headers['Authorization']
+            sessionID = self._decrypt_token(token)
+
             chunk_no, response_body = self.Sessions[sessionID].get_next_chunk()
             response_line = self.response_line(200)
             response_headers = self.response_headers()
@@ -103,7 +108,7 @@ class HTTPServer(TCPServer):
                 del self.Sessions[sessionID]
                 response_line = self.response_line(201)
 
-        except KeyError:
+        except (KeyError, jwt.DecodeError):
             response_body = "<h1>404 Session Not Found</h1>"
             response_line = self.response_line(404)
             response_headers = self.response_headers()
@@ -148,3 +153,13 @@ class HTTPServer(TCPServer):
         for h in self.headers:
             headers += "%s: %s\r\n" % (h, self.headers[h])
         return headers
+
+    def _encrypt_session_id(self, session_id):
+        token = jwt.encode({
+            'session_id': session_id
+        }, secret, algorithm='HS256')
+        return token.decode('utf-8')
+
+    def _decrypt_token(self, token):
+        payload = jwt.decode(token, secret, verify=False)
+        return payload['session_id']

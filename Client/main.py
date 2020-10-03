@@ -8,7 +8,7 @@ stop = False
 
 def get_chunk(token, i):
     while(not stop):
-        r = requests.get(url=URL+"chunk/"+token)
+        r = requests.get(url=URL+"chunk", headers={'Authorization': token})
         if(r.status_code != 200):
             break
         print(eval(r.text), i)

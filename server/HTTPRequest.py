@@ -13,7 +13,7 @@ class HTTPRequest:
         request_line = lines[0]
         self.parse_request_line(request_line)
         self._parse_headers(lines)
-        
+
     def _parse_headers(self, lines):
         for index in range(1, len(lines)):
             header = lines[index].split(':')
