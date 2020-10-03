@@ -8,10 +8,16 @@ class HTTPRequest:
         self.parse(data.decode("utf-8"))
 
     def parse(self, data):
-        lines = data.split('\r\n')
+        lines = data.strip().split('\r\n')
 
         request_line = lines[0]
         self.parse_request_line(request_line)
+        self._parse_headers(lines)
+
+    def _parse_headers(self, lines):
+        for index in range(1, len(lines)):
+            header = lines[index].split(':')
+            self.headers[header[0]] = header[1]
 
     def parse_request_line(self, request_line):
         words = request_line.split(' ')
