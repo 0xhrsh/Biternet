@@ -14,8 +14,8 @@ def get_chunk(token, i):
         print(eval(r.text), i)
 
 
-def download(file, nthreads):
-    r = requests.get(url=URL+"ext/"+file)
+def download(option, file, nthreads):
+    r = requests.get(url=URL+option + "/"+file)
     print(r.text)
     threads = []
     for i in range(0, nthreads):
@@ -28,5 +28,5 @@ def download(file, nthreads):
 
 
 if __name__ == '__main__':
-    download("test.txt", 2)
-    # download("https://www.w3.org/TR/PNG/iso_8859-1.txt", 2)
+    download("token", "test.txt", 2)
+    # download("ext","https://www.w3.org/TR/PNG/iso_8859-1.txt", 2)
