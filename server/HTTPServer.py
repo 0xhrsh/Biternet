@@ -57,6 +57,10 @@ class HTTPServer(TCPServer):
                 return self.get_token(cmd.split('/')[1])
             elif(get == "chunk"):
                 return self.get_chunk(request)
+            elif(get == "ext"):
+                fileId = self.get_ext_file(cmd.split('/')[1])
+                return self.get_token(fileId)
+
             else:
                 response_line = self.response_line(400)
                 response_headers = self.response_headers()
@@ -124,6 +128,17 @@ class HTTPServer(TCPServer):
             blank_line,
             str(data),
         )
+
+    def get_ext_file(self, url):
+
+        # something to download it in the server
+        # assign fileID to file
+
+        fileID = 0
+        return fileID
+
+
+
 
     def HTTP_501_handler(self, request):
         response_line = self.response_line(status_code=501)
