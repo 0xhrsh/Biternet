@@ -1,7 +1,7 @@
 import jwt
 import requests
-import string 
-import random 
+import string
+import random
 
 from FileDistribution import FileDistributor
 from HTTPRequest import HTTPRequest
@@ -61,7 +61,7 @@ class HTTPServer(TCPServer):
             elif(get == "chunk"):
                 return self.get_chunk(request)
             elif(get == "ext"):
-                fileId = self.get_ext_file('/'.join(cmd.split('/')[1:]) )
+                fileId = self.get_ext_file('/'.join(cmd.split('/')[1:]))
                 return self.get_token(fileId)
 
             else:
@@ -107,7 +107,8 @@ class HTTPServer(TCPServer):
             token = request.headers['Authorization']
             sessionID = self._decrypt_token(token)
 
-            chunk_no, response_body = self.Sessions[sessionID].get_next_chunk()
+            chunk_no, response_body = self.Sessions[str(
+                sessionID)].get_next_chunk()
             response_line = self.response_line(200)
             response_headers = self.response_headers()
 
@@ -134,15 +135,12 @@ class HTTPServer(TCPServer):
 
     def get_ext_file(self, url):
         # something to download it in the server
-        print(url)
         r = requests.get(url, allow_redirects=True)
-        file_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 7)) 
+        file_id = ''.join(random.choices(
+            string.ascii_uppercase + string.digits, k=7))
         # assign fileID to file
         open('files/' + file_id + '.txt', 'wb').write(r.content)
         return file_id + '.txt'
-
-
-
 
     def HTTP_501_handler(self, request):
         response_line = self.response_line(status_code=501)
@@ -174,11 +172,13 @@ class HTTPServer(TCPServer):
         return headers
 
     def _encrypt_session_id(self, session_id):
+        # return session_id
         token = jwt.encode({
             'session_id': session_id
         }, secret, algorithm='HS256')
         return token.decode('utf-8')
 
     def _decrypt_token(self, token):
+        # return token
         payload = jwt.decode(token, secret, verify=False)
         return payload['session_id']

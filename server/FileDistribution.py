@@ -18,7 +18,7 @@ class FileDistributor:
         self.filePointer = open(self.fileID)
         return self.sessionID
 
-    def get_next_chunk(self, chunk_size=16):
+    def get_next_chunk(self, chunk_size=64):
         chunkNumber = self.chunksDelivered+1
         self.chunksDelivered += 1
         return [chunkNumber, self.filePointer.read(chunk_size)]
