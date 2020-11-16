@@ -1,4 +1,7 @@
 import jwt
+import requests
+import string 
+import random 
 
 from FileDistribution import FileDistributor
 from HTTPRequest import HTTPRequest
@@ -130,12 +133,12 @@ class HTTPServer(TCPServer):
         )
 
     def get_ext_file(self, url):
-
         # something to download it in the server
+        r = requests.get(url, allow_redirects=True)
+        file_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 7)) 
         # assign fileID to file
-
-        fileID = 0
-        return fileID
+        open(file_id + '.txt', 'wb').write(r.content)
+        return file_id
 
 
 
