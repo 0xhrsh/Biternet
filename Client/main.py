@@ -15,17 +15,19 @@ def get_chunk(token, i):
 
 
 def download(file, nthreads):
-    r = requests.get(url=URL+"token/"+file)
+    r = requests.get(url=URL+"ext/"+file)
     print(r.text)
-    threads = []
-    for i in range(0, nthreads):
-        x = Thread(target=get_chunk, args=(r.text, i, ))
-        threads.append(x)
-        x.start()
+    # threads = []
+    # for i in range(0, nthreads):
+    #     x = Thread(target=get_chunk, args=(r.text, i, ))
+    #     threads.append(x)
+    #     x.start()
 
-    for x in threads:
-        x.join()
+    # for x in threads:
+    #     x.join()
 
 
 if __name__ == '__main__':
-    download("test.txt", 10)
+    # download("test.txt", 10)
+    download("https://www.w3.org/TR/PNG/iso_8859-1.txt", 1)
+    

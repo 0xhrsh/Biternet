@@ -61,7 +61,7 @@ class HTTPServer(TCPServer):
             elif(get == "chunk"):
                 return self.get_chunk(request)
             elif(get == "ext"):
-                fileId = self.get_ext_file(cmd.split('/')[1])
+                fileId = self.get_ext_file('/'.join(cmd.split('/')[1:]) )
                 return self.get_token(fileId)
 
             else:
@@ -134,11 +134,12 @@ class HTTPServer(TCPServer):
 
     def get_ext_file(self, url):
         # something to download it in the server
+        print(url)
         r = requests.get(url, allow_redirects=True)
         file_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 7)) 
         # assign fileID to file
-        open(file_id + '.txt', 'wb').write(r.content)
-        return file_id
+        open('files/' + file_id + '.txt', 'wb').write(r.content)
+        return file_id + '.txt'
 
 
 
